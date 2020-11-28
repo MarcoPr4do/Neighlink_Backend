@@ -14,21 +14,21 @@ namespace NeighLink.Api.Controllers
         protected neighlinkdbContext context = new neighlinkdbContext();
         protected Response response = new Response();
 
-        public void UnauthorizedResponse()
+        protected void UnauthorizedResponse()
         {
             response.Status = ( int ) HttpStatusCode.Unauthorized;
             response.Message = "UNAUTHORIZED USER";
             response.Result = null;
         }
 
-        public void NotFoundResponse()
+        protected void NotFoundResponse()
         {
             response.Status = ( int ) HttpStatusCode.NotFound;
             response.Message = "ENTITY NOT FOUND";
             response.Result = null;
         }
 
-        public void OkResponse(Object result)
+        protected void OkResponse(Object result)
         {
             response.Status = ( int ) HttpStatusCode.OK;
             response.Message = "SERVICE SUCCESS";
@@ -36,14 +36,14 @@ namespace NeighLink.Api.Controllers
 
         }
 
-        public void ConflictResponse(String message)
+        protected void ConflictResponse(String message)
         {
             response.Status = ( int ) HttpStatusCode.Conflict;
             response.Message = message;
             response.Result = null;
         }
 
-        public void InternalServerErrorResponse(String message)
+        protected void InternalServerErrorResponse(String message)
         {
             response.Status = ( int ) HttpStatusCode.InternalServerError;
             response.Message = $"Error => {message}";

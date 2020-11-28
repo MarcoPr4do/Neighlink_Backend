@@ -32,39 +32,39 @@ namespace NeighLink.Api.Controllers
 
         #region BILL
         [HttpGet( "condominiums/{condominiumId}/departments/{departmentId}/bills" )]
-        public async Task<ActionResult<Response>> GetBillsByDepartment(int condominiumId, int departmentId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetBillsByDepartment(int condominiumId, int departmentId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _billService.GetAllByDepartment( departmentId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpGet( "condominiums/{condominiumId}/bills" )]
-        public async Task<ActionResult<Response>> GetBillsByCondominium(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetBillsByCondominium(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _billService.GetAllByCondominium( condominiumId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "condominiums/{condominiumId}/departments/{departmentId}/bills" )]
-        public async Task<ActionResult<Response>> PostBillByDepartment(int condominiumId, int departmentId, [FromHeader] string Authorization, [FromBody] RequestBill request)
+        public async Task<IActionResult> PostBillByDepartment(int condominiumId, int departmentId, [FromHeader] string Authorization, [FromBody] RequestBill request)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace NeighLink.Api.Controllers
                 if (admin == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 var bill = new Bill()
@@ -91,16 +91,16 @@ namespace NeighLink.Api.Controllers
                 };
                 var billSaved = await _billService.Insert( bill );
                 OkResponse( billSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPut( "condominiums/{condominiumId}/departments/{departmentId}/bills/{billId}" )]
-        public async Task<ActionResult<Response>> updateCondominiumRule(int condominiumId, int departmentId, int billId, [FromHeader] string Authotization, [FromBody] RequestBill request)
+        public async Task<IActionResult> updateCondominiumRule(int condominiumId, int departmentId, int billId, [FromHeader] string Authotization, [FromBody] RequestBill request)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace NeighLink.Api.Controllers
                 if (bill == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 bill.Name = request.Name;
@@ -119,16 +119,16 @@ namespace NeighLink.Api.Controllers
                 bill.PaymentCategoryId = request.PaymentCategoryId;
                 var billSaved = await _billService.Update( bill );
                 OkResponse( billSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}/departments/{departmentId}/bills/{billId}" )]
-        public async Task<ActionResult<Response>> DeleteBillsByCondominium(int condominiumId, int departmentId, int billId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteBillsByCondominium(int condominiumId, int departmentId, int billId, [FromHeader] string Authotization)
         {
             try
             {
@@ -136,40 +136,40 @@ namespace NeighLink.Api.Controllers
                 if (bill == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 bill.IsDelete = true;
                 await _billService.Update( bill );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region PAY
         [HttpGet( "departments/{departmentId}/bills/{billId}/pays" )]
-        public async Task<ActionResult<Response>> GetResidentDepartment(int departmentId, int billId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetResidentDepartment(int departmentId, int billId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _paymentService.GetByBill( billId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "departments/{departmentId}/bills/{billId}/pays" )]
-        public async Task<ActionResult<Response>> AddResidentDepartment(int departmentId, int billId, [FromHeader] string Authorization, [FromBody] RequestPayment request)
+        public async Task<IActionResult> AddResidentDepartment(int departmentId, int billId, [FromHeader] string Authorization, [FromBody] RequestPayment request)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace NeighLink.Api.Controllers
                 if (resident == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 var payment = new Payment()
@@ -192,17 +192,17 @@ namespace NeighLink.Api.Controllers
                 };
                 var paymentSaved = await _paymentService.Insert( payment );
                 OkResponse( paymentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPut( "departments/{departmentId}/bills/{billId}/pays/{payId}/accept" )]
-        public async Task<ActionResult<Response>> AcceptPayment(int departmentId, int billId, int payId, [FromHeader] string Authotization)
+        public async Task<IActionResult> AcceptPayment(int departmentId, int billId, int payId, [FromHeader] string Authotization)
         {
             try
             {
@@ -210,17 +210,17 @@ namespace NeighLink.Api.Controllers
                 payment.ConfirmPaid = true;
                 var paymentSaved = await _paymentService.Update( payment );
                 OkResponse( paymentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPut( "departments/{departmentId}/bills/{billId}/pays/{payId}/denny" )]
-        public async Task<ActionResult<Response>> DennytPayment(int departmentId, int billId, int payId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DennytPayment(int departmentId, int billId, int payId, [FromHeader] string Authotization)
         {
             try
             {
@@ -228,35 +228,35 @@ namespace NeighLink.Api.Controllers
                 payment.ConfirmPaid = false;
                 var paymentSaved = await _paymentService.Update( payment );
                 OkResponse( paymentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion 
 
         #region PAYMENT CATEGORY
         [HttpGet( "condominiums/{condominiumId}/paymentCategories" )]
-        public async Task<ActionResult<Response>> GetResidentDepartment(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetResidentDepartment(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _paymentCategoryService.GetAllByCondomininum( condominiumId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "condominiums/{condominiumId}/paymentCategories" )]
-        public async Task<ActionResult<Response>> AddResidentDepartment(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestPaymentCategory request)
+        public async Task<IActionResult> AddResidentDepartment(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestPaymentCategory request)
         {
             try
             {
@@ -269,16 +269,16 @@ namespace NeighLink.Api.Controllers
                 };
                 var paymentCategorySaved = await _paymentCategoryService.Insert( paymentCategory );
                 OkResponse( paymentCategorySaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}/paymentCategories/{paymentCategoryId}" )]
-        public async Task<ActionResult<Response>> DeleteResidentDepartment(int condominiumId, int paymentCategoryId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteResidentDepartment(int condominiumId, int paymentCategoryId, [FromHeader] string Authotization)
         {
             try
             {
@@ -286,12 +286,12 @@ namespace NeighLink.Api.Controllers
                 paymentCategory.IsDelete = true;
                 await _paymentCategoryService.Update( paymentCategory );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion

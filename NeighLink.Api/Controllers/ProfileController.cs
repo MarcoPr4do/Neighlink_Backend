@@ -35,7 +35,7 @@ namespace NeighLink.Api.Controllers
         }
 
         [HttpPost( "users/auth" )]
-        public async Task<ActionResult<Response>> Login([FromBody] RequestAuth request)
+        public async Task<IActionResult> Login([FromBody] RequestAuth request)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace NeighLink.Api.Controllers
                 if (admin == null && resident == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 if (admin != null)
@@ -55,23 +55,23 @@ namespace NeighLink.Api.Controllers
                 }
                 else
                 {
-                    responseLogin.User = resident;
-                    responseLogin.UserType = "RESIDENTE";
+                    responseLogin.User = admin;
+                    responseLogin.UserType = "ADMINISTRADOR";
                 }
                 OkResponse( responseLogin );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
 
         #region RESIDENTS
         [HttpGet( "residents/{id}" )]
-        public async Task<ActionResult<Response>> GetResident(int id, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetResident(int id, [FromHeader] string Authotization)
         {
             try
             {
@@ -79,22 +79,22 @@ namespace NeighLink.Api.Controllers
                 if (resident == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 var user = await _userService.GetById( resident.UserId );
                 resident.User = user;
                 OkResponse( resident );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "residents" )]
-        public async Task<ActionResult<Response>> RegisterResident([FromHeader] string Authotization, [FromBody] RequestResident request)
+        public async Task<IActionResult> RegisterResident([FromHeader] string Authotization, [FromBody] RequestResident request)
         {
             try
             {
@@ -118,35 +118,35 @@ namespace NeighLink.Api.Controllers
                 var residentSaved = await _residentService.Insert( resident );
                 residentSaved.User = userSaved;
                 OkResponse( residentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region ADMINISTRADOR
         [HttpGet( "administrators/{id}/planMembers" )]
-        public async Task<ActionResult<Response>> GetPlanMember(int id, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetPlanMember(int id, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _planMemberService.GetAllByAdmin( id );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "administrators" )]
-        public async Task<ActionResult<Response>> RegisterResident([FromHeader] string Authotization, [FromBody] RequestAdministrator request)
+        public async Task<IActionResult> RegisterResident([FromHeader] string Authotization, [FromBody] RequestAdministrator request)
         {
             try
             {
@@ -171,34 +171,34 @@ namespace NeighLink.Api.Controllers
                 var adminSaved = await _administratorService.Insert( admin );
                 adminSaved.User = userSaved;
                 OkResponse( adminSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region CONDOMINIUMS
         [HttpGet( "administrators/{adminId}/condominiums" )]
-        public async Task<ActionResult<Response>> GetCondominiums(int adminId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetCondominiums(int adminId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _condominiumService.GetAllByAdmin( adminId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPost( "condominiums" )]
-        public async Task<ActionResult<Response>> AddCondominium([FromHeader] string Authorization, [FromBody] Condominium request)
+        public async Task<IActionResult> AddCondominium([FromHeader] string Authorization, [FromBody] Condominium request)
         {
             try
             {
@@ -206,38 +206,38 @@ namespace NeighLink.Api.Controllers
                 if (admin == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 request.AdministratorId = admin.AdministratorId;
                 var condominiumSaved = await _condominiumService.Insert( request );
                 OkResponse( condominiumSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPut( "condominiums/{condominiumId}" )]
-        public async Task<ActionResult<Response>> UpdateCondominium(int condominiumId, [FromHeader] string Authotization, [FromBody] Condominium request)
+        public async Task<IActionResult> UpdateCondominium(int condominiumId, [FromHeader] string Authotization, [FromBody] Condominium request)
         {
             try
             {
                 request.CondominiumId = condominiumId;
                 var condominiumSaved = await _condominiumService.Update( request );
                 OkResponse( condominiumSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}" )]
-        public async Task<ActionResult<Response>> DeleteCondominium(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteCondominium(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
@@ -245,12 +245,12 @@ namespace NeighLink.Api.Controllers
                 condominium.IsDelete = true;
                 await _condominiumService.Update( condominium );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
@@ -258,22 +258,22 @@ namespace NeighLink.Api.Controllers
 
         #region CONDOMINIUMS RULES
         [HttpGet( "condominiums/{condominiumId}/condominiumrules" )]
-        public async Task<ActionResult<Response>> GetCondominiumsRules(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetCondominiumsRules(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _condominiumRuleService.GetByCondominium( condominiumId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPost( "condominiums/{condominiumId}/condominiumrules" )]
-        public async Task<ActionResult<Response>> AddCondominium(int condominiumId, [FromHeader] string Authorization, [FromBody] Condominiumrule request)
+        public async Task<IActionResult> AddCondominium(int condominiumId, [FromHeader] string Authorization, [FromBody] Condominiumrule request)
         {
             try
             {
@@ -281,22 +281,22 @@ namespace NeighLink.Api.Controllers
                 if (admin == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 request.CondominiumId = condominiumId;
                 var condominiumSaved = await _condominiumRuleService.Insert( request );
                 OkResponse( condominiumSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPut( "condominiums/{condominiumId}/condominiumrules/{condominiumRuleId}" )]
-        public async Task<ActionResult<Response>> updateCondominiumRule(int condominiumId, int condominiumRuleId, [FromHeader] string Authotization, [FromBody] Condominiumrule request)
+        public async Task<IActionResult> updateCondominiumRule(int condominiumId, int condominiumRuleId, [FromHeader] string Authotization, [FromBody] Condominiumrule request)
         {
             try
             {
@@ -304,41 +304,41 @@ namespace NeighLink.Api.Controllers
                 request.CondominiumRuleId = condominiumRuleId;
                 var condominiumRuleSaved = await _condominiumRuleService.Update( request );
                 OkResponse( condominiumRuleSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}/condominiumrules/{condominiumRuleId}" )]
-        public async Task<ActionResult<Response>> DeleteCondominiumRule(int condominiumId, int condominiumRuleId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteCondominiumRule(int condominiumId, int condominiumRuleId, [FromHeader] string Authotization)
         {
             try
             {
                 await _condominiumRuleService.Delete( condominiumRuleId );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region RESIDENT DEPARTMENT
         [HttpGet( "residentdepartments" )]
-        public async Task<ActionResult<Response>> GetResidentDepartment(int? condominiumId, int? departmentId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetResidentDepartment(int? condominiumId, int? departmentId, [FromHeader] string Authotization)
         {
             try
             {
                 if (condominiumId == null && departmentId == null)
                 {
                     OkResponse( new ArrayList() );
-                    return response;
+                    return new ObjectResult(response);
                 }
                 if (condominiumId != null)
                 {
@@ -350,17 +350,17 @@ namespace NeighLink.Api.Controllers
                     var result = await _residentDepartmentService.GetAllByDepartment( departmentId.Value );
                     OkResponse( result );
                 }
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "residentdepartments" )]
-        public async Task<ActionResult<Response>> AddResidentDepartment([FromHeader] string Authorization, [FromBody] RequestResidentdepartment request)
+        public async Task<IActionResult> AddResidentDepartment([FromHeader] string Authorization, [FromBody] RequestResidentdepartment request)
         {
             try
             {
@@ -368,13 +368,13 @@ namespace NeighLink.Api.Controllers
                 if (resident == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 var department = await _departmentService.GetByCode( request.Code );
                 if (department == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 var residentDepartment = new ResidentDepartment()
@@ -387,16 +387,16 @@ namespace NeighLink.Api.Controllers
                 };
                 var residentDepartmentSaved = await _residentDepartmentService.Insert( residentDepartment );
                 OkResponse( residentDepartmentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "residentdepartments/{id}" )]
-        public async Task<ActionResult<Response>> DeleteResidentDepartment(int id, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteResidentDepartment(int id, [FromHeader] string Authotization)
         {
             try
             {
@@ -411,12 +411,12 @@ namespace NeighLink.Api.Controllers
                     await _residentDepartmentService.Update( residentDepartment );
                     OkResponse( null );
                 }
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion

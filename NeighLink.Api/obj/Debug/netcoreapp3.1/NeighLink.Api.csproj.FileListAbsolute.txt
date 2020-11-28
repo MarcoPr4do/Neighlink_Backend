@@ -1,5 +1,6 @@
 D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\appsettings.json
+D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\libman.json
 D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
 D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\NeighLink.Api.exe
 D:\UPC-2020-2\DISENO_EXPERIMENTOS\TRABAJO_FINAL\Neighlink\NeighLink\NeighLink.Api\bin\Debug\netcoreapp3.1\NeighLink.Api.deps.json

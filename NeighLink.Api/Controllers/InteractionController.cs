@@ -35,23 +35,23 @@ namespace NeighLink.Api.Controllers
 
         #region News
         [HttpGet( "condominiums/{condominiumId}/news" )]
-        public async Task<ActionResult<Response>> GetNewsByCondominium(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetNewsByCondominium(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _newsService.GetAllByCondominium( condominiumId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "condominiums/{condominiumId}/news" )]
-        public async Task<ActionResult<Response>> AddNews(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestNews request)
+        public async Task<IActionResult> AddNews(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestNews request)
         {
             try
             {
@@ -64,16 +64,16 @@ namespace NeighLink.Api.Controllers
                 };
                 var newsSaved = await _newsService.Insert( news );
                 OkResponse( newsSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPut( "condominiums/{condominiumId}/news/{newsId}" )]
-        public async Task<ActionResult<Response>> UpdateNews(int condominiumId, int newsId, [FromHeader] string Authotization, [FromBody] RequestNews request)
+        public async Task<IActionResult> UpdateNews(int condominiumId, int newsId, [FromHeader] string Authotization, [FromBody] RequestNews request)
         {
             try
             {
@@ -81,56 +81,56 @@ namespace NeighLink.Api.Controllers
                 if (news == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 news.Title = request.Title;
                 news.Description = request.Description;
                 var newsSaved = await _newsService.Update( news );
                 OkResponse( newsSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "/condominiums/{condominiumId}/news/{newsId}" )]
-        public async Task<ActionResult<Response>> DeleteNews(int condominiumId, int newsId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteNews(int condominiumId, int newsId, [FromHeader] string Authotization)
         {
             try
             {
                 await _newsService.Delete( newsId );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region POLL
         [HttpGet( "condominiums/{condominiumId}/polls" )]
-        public async Task<ActionResult<Response>> GetPollByCondominium(int condominiumId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetPollByCondominium(int condominiumId, [FromHeader] string Authotization)
         {
             try
             {
                 var result = await _pollService.GetAllByCondominium( condominiumId );
                 OkResponse( result );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "condominiums/{condominiumId}/polls" )]
-        public async Task<ActionResult<Response>> AddNews(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestPoll request)
+        public async Task<IActionResult> AddNews(int condominiumId, [FromHeader] string Authorization, [FromBody] RequestPoll request)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace NeighLink.Api.Controllers
                 if (admin == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 var poll = new Poll()
@@ -153,16 +153,16 @@ namespace NeighLink.Api.Controllers
                 };
                 var pollSaved = await _pollService.Insert( poll );
                 OkResponse( pollSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpPut( "condominiums/{condominiumId}/polls/{pollId}" )]
-        public async Task<ActionResult<Response>> UpdatePoll(int condominiumId, int pollId, [FromHeader] string Authotization, [FromBody] RequestPoll request)
+        public async Task<IActionResult> UpdatePoll(int condominiumId, int pollId, [FromHeader] string Authotization, [FromBody] RequestPoll request)
         {
             try
             {
@@ -170,23 +170,23 @@ namespace NeighLink.Api.Controllers
                 if (poll == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 poll.Title = request.Title;
                 poll.Description = request.Description;
                 poll.StartDate = request.StartDate;
                 poll.EndDate = request.EndDate;
                 var pollSaved = await _pollService.Update( poll );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}/polls/{pollId}" )]
-        public async Task<ActionResult<Response>> DeletePoll(int condominiumId, int pollId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeletePoll(int condominiumId, int pollId, [FromHeader] string Authotization)
         {
             try
             {
@@ -194,24 +194,24 @@ namespace NeighLink.Api.Controllers
                 if (poll == null)
                 {
                     NotFoundResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
                 poll.IsDelete = true;
                 await _pollService.Update( poll );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion
 
         #region OPTION RESIDENT
         [HttpGet( "condominiums/{condominiumId}/polls/{pollId}/responses" )]
-        public async Task<ActionResult<Response>> GetPollsResponseResident(int condominiumId, int pollId, [FromHeader] string Authotization)
+        public async Task<IActionResult> GetPollsResponseResident(int condominiumId, int pollId, [FromHeader] string Authotization)
         {
             try
             {
@@ -219,17 +219,17 @@ namespace NeighLink.Api.Controllers
                 var optionsId = options.Select( x => x.OptionId ).ToList();
                 var optionsResidentes = await _optionResidentService.GetAllByPoll( optionsId );
                 OkResponse( optionsResidentes );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
 
         [HttpPost( "condominiums/{condominiumId}/polls/{pollId}/responses" )]
-        public async Task<ActionResult<Response>> AddResponseResident(int condominiumId, int pollId, [FromHeader] string Authorization, [FromBody] RequestOptionResident request)
+        public async Task<IActionResult> AddResponseResident(int condominiumId, int pollId, [FromHeader] string Authorization, [FromBody] RequestOptionResident request)
         {
             try
             {
@@ -237,7 +237,7 @@ namespace NeighLink.Api.Controllers
                 if (resident == null)
                 {
                     UnauthorizedResponse();
-                    return response;
+                    return new ObjectResult(response);
                 }
 
                 var optionResident = new OptionResident()
@@ -252,40 +252,16 @@ namespace NeighLink.Api.Controllers
 
                 var optionResidentSaved = await _optionResidentService.Insert( optionResident );
                 OkResponse( optionResidentSaved );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
-            }
-        }
-        [HttpPut( "condominiums/{condominiumId}/polls/{pollId}" )]
-        public async Task<ActionResult<Response>> UpdateOptionResident(int condominiumId, int pollId, [FromHeader] string Authotization, [FromBody] RequestPoll request)
-        {
-            try
-            {
-                var poll = await _pollService.GetById( pollId );
-                if (poll == null)
-                {
-                    NotFoundResponse();
-                    return response;
-                }
-                poll.Title = request.Title;
-                poll.Description = request.Description;
-                poll.StartDate = request.StartDate;
-                poll.EndDate = request.EndDate;
-                var pollSaved = await _pollService.Update( poll );
-                return response;
-            }
-            catch (Exception e)
-            {
-                InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         [HttpDelete( "condominiums/{condominiumId}/polls/{pollId}/responses/{responseId}" )]
-        public async Task<ActionResult<Response>> DeleteResponseResident(int condominiumId, int pollId, int responseId, [FromHeader] string Authotization)
+        public async Task<IActionResult> DeleteResponseResident(int condominiumId, int pollId, int responseId, [FromHeader] string Authotization)
         {
             try
             {
@@ -293,12 +269,12 @@ namespace NeighLink.Api.Controllers
                 optionResident.IsDelete = true;
                 await _optionResidentService.Update( optionResident );
                 OkResponse( null );
-                return response;
+                return new ObjectResult(response);
             }
             catch (Exception e)
             {
                 InternalServerErrorResponse( e.Message );
-                return response;
+                return new ObjectResult(response);
             }
         }
         #endregion

@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v3.1": {
       "NeighLink.Api/1.0.0": {
         "dependencies": {
+          "Microsoft.OpenApi": "1.2.3",
           "NeighLink.DateLayer": "1.0.0",
           "Swashbuckle.AspNetCore": "5.6.3",
           "Swashbuckle.AspNetCore.Filters": "6.0.1",
